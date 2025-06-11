@@ -35,6 +35,8 @@ jobs:
 
     - name: Commit and push charts
       run: |
+        git config user.name "${{ secrets.GH_USER_NAME }}"
+        git config user.email "${{ secrets.GH_USER_EMAIL }}"
         git add charts/*.csv
         git diff-index --quiet HEAD || git commit -m "Add daily Kworb charts for ${{ github.run_number }}"
         git push
