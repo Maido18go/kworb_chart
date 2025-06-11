@@ -38,5 +38,9 @@ jobs:
         git config user.name "${{ secrets.GH_USER_NAME }}"
         git config user.email "${{ secrets.GH_USER_EMAIL }}"
         git add charts/*.csv
-        git diff-index --quiet HEAD || git commit -m "Add daily Kworb charts for ${{ github.run_number }}"
-        git push
+        if git diff --staged --quiet; then
+          echo "No changes to commit. Exiting."
+        else
+          git commit -m "Add daily Kworb charts for ${{ github.run_number }}"
+          git push
+        fi
