@@ -2,8 +2,8 @@ name: Get Kworb Daily Charts
 
 on:
   schedule:
-    # 9:05AM JST 
-    - cron: '26 20 * * *'
+    # 9:10AM JST 
+    - cron: '10 0 * * *'
   workflow_dispatch:
     # GitHub UIから手動でワークフローを実行できるようにする
 
