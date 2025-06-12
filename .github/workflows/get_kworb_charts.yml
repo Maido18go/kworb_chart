@@ -3,7 +3,7 @@ name: Get Kworb Daily Charts
 on:
   schedule:
     # 9:05AM JST 
-    - cron: '5 0 * * *'
+    - cron: '26 20 * * *'
   workflow_dispatch:
     # GitHub UIから手動でワークフローを実行できるようにする
 
@@ -43,6 +43,6 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit. Exiting."
         else
-          git commit -m "Add daily Kworb charts for ${{ github.run_number }}"
+          git commit -m "Add daily Kworb charts"
           git push
         fi
