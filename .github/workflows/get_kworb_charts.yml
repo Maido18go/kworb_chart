@@ -44,7 +44,7 @@ jobs:
         TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
         TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
       run: |
-        python extract_top5.py # 修正したPythonスクリプトを実行
+        python top5.py # 修正したPythonスクリプトを実行
 
     - name: Commit and push charts
       run: |
