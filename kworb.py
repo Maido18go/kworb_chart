@@ -1,51 +1,61 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
-import os
-from datetime import datetime
-from country_data import country_codes
+name: Get Kworb Daily Charts and Tweet
 
-def kworb_chart(countrycode): 
+on:
+  schedule:
+    - cron: '0 0 * * *' # 毎日午前0時 (UTC) に実行
+  workflow_dispatch:
 
-  # Download HTML file
-  url = f"https://kworb.net/spotify/country/{countrycode}_daily.html"
-  response = requests.get(url)
-  response.encoding = 'utf-8'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # CSVファイルをコミットするため
+      # tweets: write # GitHubトークン経由でのTwitterへの直接的な権限付与は不可。Pythonスクリプト内の認証を使用。
 
-  # Get HTML contents in text format
-  html_content = response.text
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-  # Parse HTML with BeautifulSoup and find the table
-  soup = BeautifulSoup(html_content, 'html.parser')
-  table = soup.find('table', id='spotifydaily')
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
 
-  if not table:
-      print("Table is not found.")
-      exit()
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # `tweepy` を追加でインストール
+        pip install requests beautifulsoup4 pandas tweepy
 
-  # File name
-  charts_dir = "charts"
-  today = datetime.now().strftime("%Y-%m-%d")
-  csv_filename = f'{charts_dir}/{countrycode}_dailytop50_{today}.csv'
+    - name: Ensure charts directory exists
+      run: |
+        mkdir -p charts
 
-  # Extract data from tables
-  rows = []
+    - name: Run Kworb Chart Scraper
+      id: run_scraper # ステップにIDを追加
+      run: |
+        python kworb.py
+      # ここで生成されたCSVは `Commit and push charts` でプッシュされる
 
-  for i, tr in enumerate(table.find('tbody').find_all('tr')):
-      if i >= 50:
-          break
+    - name: Extract Top 5 and Tweet
+      env: # 環境変数を設定
+        TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+        TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      run: |
+        python extract_top5.py # 修正したPythonスクリプトを実行
 
-      row = []
-      row.append(today)
-
-      for td in tr.find_all('td'):
-          # Strip HTML tags and get text content only
-          row.append(td.text.strip())
-      rows.append(row)
-
-  df = pd.DataFrame(rows)
-  df.to_csv(csv_filename, index=False, header=False, encoding='utf-8-sig')
-
-if __name__ == "__main__":
-    for country in country_codes:
-        kworb_chart(country)
+    - name: Commit and push charts
+      run: |
+        git config user.name "${{ secrets.GH_USER_NAME }}"
+        git config user.email "${{ secrets.GH_USER_EMAIL }}"
+        
+        git add charts/*.csv
+        
+        if git diff --staged --quiet; then
+          echo "No changes to commit. Exiting."
+        else
+          git commit -m "Add daily Kworb charts for ${{ github.run_number }}"
+          git push
+        fi
