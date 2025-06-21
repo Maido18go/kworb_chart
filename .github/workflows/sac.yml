@@ -12,9 +12,7 @@ jobs:
   tweet:
     runs-on: ubuntu-latest
     permissions:
-      # ツイートのためには 'contents: write' は通常不要だが、他のアクションで必要なら残す
-      # 明示的にアクセス権は不要だが、慣習として必要なら入れる
-      # contents: write 
+      contents: write 
 
     steps:
     - name: Checkout repository
