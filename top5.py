@@ -40,7 +40,7 @@ def extract_top5(directory="charts"):
                     rank = row[1]
                     title = row[2]
                     artist = row[3]
-                    tweet_message += f"#{rank}: {title} by {artist}\n"
+                    tweet_message += f"#{rank}: {title} {artist}\n"
             
             all_tweets.append(tweet_message) # ツイートメッセージを追加
 
