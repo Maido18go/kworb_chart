@@ -9,6 +9,7 @@ jobs:
   tweet:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       # ツイートのみなので contents: write は不要 (デフォルトでread権限はある)
 
     steps:
