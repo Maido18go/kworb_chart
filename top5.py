@@ -18,8 +18,6 @@ def extract_top5(directory="charts"):
     for csv_file in csv_files:
         country_code = os.path.basename(csv_file).split('_')[0]
         display_name = country_names.get(country_code, country_code.upper())
-        
-        # 各国のチャートURLを生成
         chart_url = f"https://kworb.net/spotify/country/{country_code}_daily.html"
 
         tweet_message = f"--- Spotify Today's Top 5 - {display_name} ---\n"
@@ -36,8 +34,7 @@ def extract_top5(directory="charts"):
                     artist = row[3]
                     tweet_message += f"#{rank}: {title} {artist}\n"
             
-            # ここにURLを追加
-            tweet_message += f"Chart Link: {chart_url}\n" # 改行を追加して次の国のツイートと区切る
+            tweet_message += f"{chart_url}\n"
             
             all_tweets.append(tweet_message)
 
