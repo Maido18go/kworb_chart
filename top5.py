@@ -7,6 +7,7 @@ import tweepy
 
 def extract_top5(directory="charts"):
     today = datetime.now().strftime("%Y-%m-%d")
+    kworb_url = "https://kworb.net/spotify/"
 
     csv_files = glob.glob(os.path.join(directory, f"*_dailytop50_{today}.csv"))
     if not csv_files:
@@ -18,8 +19,7 @@ def extract_top5(directory="charts"):
     for csv_file in csv_files:
         country_code = os.path.basename(csv_file).split('_')[0]
         display_name = country_names.get(country_code, country_code.upper())
-        chart_url = f"https://kworb.net/spotify/country/{country_code}_daily.html"
-
+        
         tweet_message = f"--- Spotify Today's Top 5 - {display_name} ---\n"
         
         try:
@@ -33,8 +33,8 @@ def extract_top5(directory="charts"):
                     title = row[2]
                     artist = row[3]
                     tweet_message += f"#{rank}: {title} {artist}\n"
-            
-            tweet_message += f"{chart_url}\n"
+ 
+            tweet_message += f"{kworb_url}\n"
             
             all_tweets.append(tweet_message)
 
@@ -59,6 +59,8 @@ def post_tweets(tweet_messages):
 
     try:
         auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_token_secret)
+        api = tweepy.API(auth)
+ 
         client = tweepy.Client(
             consumer_key=consumer_key, consumer_secret=consumer_secret,
             access_token=access_token, access_token_secret=access_token_secret
