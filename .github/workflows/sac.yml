@@ -2,9 +2,7 @@ name: Announcement for The Official Southeast Asia Charts
 
 on:
   schedule:
-    # 毎週火曜日の日本時間午後9時 (JST 21:00) に実行
-    # JST (UTC+9) 21:00 は UTC 12:00
-    - cron: '0 12 * * TUE'
+    - cron: '0 10 * * TUE'
 
   workflow_dispatch:
 
