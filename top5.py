@@ -21,9 +21,14 @@ def extract_top5(directory="charts"):
         display_name = country_names.get(country_code, country_code.upper())
         
         tweet_message = f"--- Spotify Today's Top 5 - {display_name} ---\n"
-        
+        rows_to_read = 5
+        # Vietnam chart changed to Top 3 announcement due to X character limit
+        if country_code == 'vn': 
+            rows_to_read = 3
+            tweet_message = f"--- Spotify Today's Top 3 - {display_name} ---\n" 
+
         try:
-            df = pd.read_csv(csv_file, header=None, nrows=5, encoding='utf-8-sig')
+            df = pd.read_csv(csv_file, header=None, nrows=rows_to_read, encoding='utf-8-sig')
 
             if df.empty:
                 tweet_message += "No data available."
