@@ -38,7 +38,7 @@ def extract_top5(directory="charts"):
                     title = row[2]
                     artist = row[3]
                     tweet_message += f"#{rank}: {title} {artist}\n"
-            
+ 
             tweet_message += f"{kworb_url}\n"
             
             all_tweets.append(tweet_message)
@@ -65,7 +65,7 @@ def post_tweets(tweet_messages):
     try:
         auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_token_secret)
         api = tweepy.API(auth)
-        
+ 
         client = tweepy.Client(
             consumer_key=consumer_key, consumer_secret=consumer_secret,
             access_token=access_token, access_token_secret=access_token_secret
