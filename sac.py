@@ -2,7 +2,7 @@ import os
 import tweepy
 
 def tweet_message():
-    message = "The Official Southeast Asia Charts has announced a new chart!\nhttps://www.officialseacharts.com/weeklychart"
+    message = "The Official Southeast Asia Charts has announced a new weekly chart!\nhttps://www.officialseacharts.com/weeklychart"
     
     consumer_key = os.environ.get("TWITTER_API_KEY")
     consumer_secret = os.environ.get("TWITTER_API_SECRET")
