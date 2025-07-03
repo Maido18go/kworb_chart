@@ -1,7 +1,7 @@
 # Google Cloud Storage
 resource "google_storage_bucket" "chart_csv_bucket" {
-  name         = "asiapop_charts"
-  location     = "asia-northeast1"
+  name         = var.bucket
+  location     = var.gcs_location
 }
 
 resource "google_storage_bucket_object" "countries_folder" {
@@ -14,7 +14,7 @@ resource "google_storage_bucket_object" "countries_folder" {
 # BigQuery
 resource "google_bigquery_dataset" "asiapop_dataset" {
   dataset_id   = var.dataset_id
-  location     = var.location
+  location     = var.bq_location
 }
 
 resource "google_bigquery_table" "dailytop50_tables" {
