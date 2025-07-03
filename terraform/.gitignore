@@ -7,4 +7,3 @@ override.tf
 override.tf.json
 crash.log
 .terraform.d/
-variables.tf
